@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Table 1</h1>
+    <table id="table1" border="1">
+        <!-- Table 1 content will be inserted here by JavaScript -->
+    </table>
+
+    <h1>Table 2</h1>
+    <table border="1">
+        <tr>
+            <th>Category</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Alpha</td>
+            <td id="alpha-value"></td>
+        </tr>
+        <tr>
+            <td>Beta</td>
+            <td id="beta-value"></td>
+        </tr>
+        <tr>
+            <td>Charlie</td>
+            <td id="charlie-value"></td>
+        </tr>
+    </table>
+
+    <script>
+        // Function to fetch and parse CSV data from the local directory
+        async function fetchCSV(url) {
+            const response = await fetch(url);
+            const data = await response.text();
+            return data.split('\n').map(row => row.split(','));
+        }
+
+        // Function to display Table 1
+        function displayTable1(data) {
+            const table1 = document.getElementById('table1');
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                table1.appendChild(tr);
+            });
+        }
+
+        // Function to calculate and display Table 2
+        function displayTable2(data) {
+            const indexMap = {};
+            data.forEach(row => {
+                indexMap[row[0]] = parseInt(row[1]);
+            });
+
+            const alphaValue = indexMap['A5'] + indexMap['A20'];
+            const betaValue = indexMap['A15'] / indexMap['A7'];
+            const charlieValue = indexMap['A13'] * indexMap['A12'];
+
+            document.getElementById('alpha-value').textContent = alphaValue;
+            document.getElementById('beta-value').textContent = betaValue;
+            document.getElementById('charlie-value').textContent = charlieValue;
+        }
+
+        // Main function to load and display tables
+        async function main() {
+            const data = await fetchCSV('Table_Input.csv');
+            displayTable1(data);
+            displayTable2(data);
+        }
+
+        // Run the main function
+        main();
+    </script>
+</body>
+</html>
