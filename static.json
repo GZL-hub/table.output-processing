@@ -4,4 +4,4 @@
     "routes": {
       "/**": "index.html"
     }
-  }// Trigger new build
+  } 
